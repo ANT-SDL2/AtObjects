@@ -1,6 +1,6 @@
 //ObjectManager.h
-#ifndef NEOPHYSICS_OBJECTMANAGER_H
-#define NEOPHYSICS_OBJECTMANAGER_H
+#ifndef NEOOBJECTS_OBJECTMANAGER_H
+#define NEOOBJECTS_OBJECTMANAGER_H
 
 #include <string>
 #include <vector>
@@ -10,8 +10,9 @@
 #include <AtTools/AtTools.h>
 
 #include "Object.h"
+#include "List.h"
 
-namespace AtPhys {
+namespace AtObjects {
     namespace Input {
         static const int Keyboard       = 1;
         static const int Joystick       = 2;
@@ -40,14 +41,14 @@ namespace AtPhys {
         public:
             void SetDebug(int i, bool State);
         protected:
-            template <class IDType, class Type, class InheritedType> Type *MakeObject(AtTools::List<IDType, Type, InheritedType> &List, std::string Index, std::string ID, InheritedType *Parent);
-            template <class IDType, class Type, class InheritedType> void ProcessListCollisions(AtTools::List<IDType, Type, InheritedType> &List, InheritedType *Area);
-            template <class IDType, class Type, class InheritedType> bool RemoveFromList(AtTools::List<IDType, Type, InheritedType> &List, Type *Target);
+            template <class IDType, class Type, class InheritedType> Type *MakeObject(List<IDType, Type, InheritedType> &List, std::string Index, std::string ID, InheritedType *Parent);
+            template <class IDType, class Type, class InheritedType> void ProcessListCollisions(List<IDType, Type, InheritedType> &List, InheritedType *Area);
+            template <class IDType, class Type, class InheritedType> bool RemoveFromList(List<IDType, Type, InheritedType> &List, Type *Target);
             virtual void RemoveRelatedTo(BaseType *Parent);
-            template <class IDType, class Type, class InheritedType> void RemoveRelatedToFromList(AtTools::List<IDType, Type, InheritedType> &List, InheritedType *Parent);
-            template <class IDType, class Type, class InheritedType> void ResetList(AtTools::List<IDType, Type, InheritedType> &List, InheritedType *Parent = NULL);
+            template <class IDType, class Type, class InheritedType> void RemoveRelatedToFromList(List<IDType, Type, InheritedType> &List, InheritedType *Parent);
+            template <class IDType, class Type, class InheritedType> void ResetList(List<IDType, Type, InheritedType> &List, InheritedType *Parent = NULL);
             virtual void ResetRelatedTo(BaseType *Parent);
-            template <class IDType, class Type, class InheritedType> void ScaleList(AtTools::List<IDType, Type, InheritedType> &List, Vector2 Scale);
+            template <class IDType, class Type, class InheritedType> void ScaleList(List<IDType, Type, InheritedType> &List, Vector2 Scale);
     };
 
     template <class BaseType>
@@ -57,7 +58,7 @@ namespace AtPhys {
 
     template <class BaseType>
     template <class IDType, class Type, class InheritedType>
-    Type *ObjectManager<BaseType>::MakeObject(AtTools::List<IDType, Type, InheritedType> &List, std::string Index, std::string Name, InheritedType *Parent) {
+    Type *ObjectManager<BaseType>::MakeObject(List<IDType, Type, InheritedType> &List, std::string Index, std::string Name, InheritedType *Parent) {
         Type *Object = NULL;
 
         if (!Objects[Index+"."+Name]) {
@@ -69,7 +70,7 @@ namespace AtPhys {
                 Object->SetParent(Parent);
                 Object->SetName(Name);
                 Object->SetIndex(Index);
-                Object->PushEvent(AtPhys::Events::Load);
+                Object->PushEvent(AtObjects::Events::Load);
                 Object->ScaleTo(Scale.X(), Scale.Y());
                 /*if (Index == "Settings" && ID == "WindowModeList") {
                     std::cout << Object->ID() << " " << Objects[Index][ID]->ID() << std::endl;
@@ -94,7 +95,7 @@ namespace AtPhys {
 
     template <class BaseType>
     template <class IDType, class Type, class InheritedType>
-    void ObjectManager<BaseType>::ProcessListCollisions(AtTools::List<IDType, Type, InheritedType> &List, InheritedType *Area) {
+    void ObjectManager<BaseType>::ProcessListCollisions(List<IDType, Type, InheritedType> &List, InheritedType *Area) {
         Type *Object = List.GetFirst();
         while (Object) {
             if (Object->GetParent() == Area) {
@@ -106,7 +107,7 @@ namespace AtPhys {
 
     template <class BaseType>
     template <class IDType, class Type, class InheritedType>
-    bool ObjectManager<BaseType>::RemoveFromList(AtTools::List<IDType, Type, InheritedType> &List, Type *Target) {
+    bool ObjectManager<BaseType>::RemoveFromList(List<IDType, Type, InheritedType> &List, Type *Target) {
         bool Removed = false;
 
         if (Target) {
@@ -131,7 +132,7 @@ namespace AtPhys {
 
     template <class BaseType>
     template <class IDType, class Type, class InheritedType>
-    void ObjectManager<BaseType>::RemoveRelatedToFromList(AtTools::List<IDType, Type, InheritedType> &List, InheritedType *Parent) {
+    void ObjectManager<BaseType>::RemoveRelatedToFromList(List<IDType, Type, InheritedType> &List, InheritedType *Parent) {
         Type *Object = List.GetFirst();
         while (Object) {
             Type *Next = Object->Next;
@@ -170,7 +171,7 @@ namespace AtPhys {
 
     template <class BaseType>
     template <class IDType, class Type, class InheritedType>
-    void ObjectManager<BaseType>::ResetList(AtTools::List<IDType, Type, InheritedType> &List, InheritedType *Parent) {
+    void ObjectManager<BaseType>::ResetList(List<IDType, Type, InheritedType> &List, InheritedType *Parent) {
         Type *Object = List.GetFirst();
         while (Object) {
             if (Object->GetParent() == Parent) {
@@ -187,7 +188,7 @@ namespace AtPhys {
 
     template <class BaseType>
     template <class IDType, class Type, class InheritedType>
-    void ObjectManager<BaseType>::ScaleList(AtTools::List<IDType, Type, InheritedType> &List, Vector2 Scale) {
+    void ObjectManager<BaseType>::ScaleList(List<IDType, Type, InheritedType> &List, Vector2 Scale) {
         Type *Object = List.GetFirst();
         while (Object) {
             Object->ScaleTo(Scale.X(), Scale.Y());

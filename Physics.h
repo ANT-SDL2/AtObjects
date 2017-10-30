@@ -1,9 +1,9 @@
-//Functions.h
-#ifndef NEOPHYSICS_FUNCTIONS_H
-#define NEOPHYSICS_FUNCTIONS_H
+//Physics.h
+#ifndef NEOOBJECTS_PHYSICS_H
+#define NEOOBJECTS_PHYSICS_H
 
 #include "Object.h"
-namespace AtPhys {
+namespace AtObjects {
     float CalculateDrag(float Velocity, float DragCoefficient, float Area);
     bool DiskInDisk(float X1, float Y1, float R1, float r1, float Angle1, float Direction1, float X2, float Y2, int R2, float r2, float Angle2, float Direction2, float &AdjustX, float &AdjustY);
     bool DiskInRectangle(float X1, float Y1, float R1, float r1, float Angle1, float Direction1, float X2, float Y2, int Width, int Height, float Direction, float &AdjustX, float &AdjustY);

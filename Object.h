@@ -1,6 +1,6 @@
 //Object.h
-#ifndef NEOPHYSICS_OBJECT_H
-#define NEOPHYSICS_OBJECT_H
+#ifndef NEOOBJECTS_OBJECT_H
+#define NEOOBJECTS_OBJECT_H
 
 #include <string>
 #include <vector>
@@ -22,7 +22,7 @@ namespace Position {
     static const float Edge               = 1.0f;
 }
 
-namespace AtPhys {
+namespace AtObjects {
     namespace Events {
         static const int Idle               = 0;
         static const int MouseIn            = 1;
@@ -40,6 +40,8 @@ namespace AtPhys {
         static const int Stop               = 13;
         static const int ValueChange        = 14;
         static const int Return             = 15;
+        static const int AnimationChange    = 16;
+        static const int TextureChange      = 17;
     }
 
     class Object {
@@ -49,7 +51,7 @@ namespace AtPhys {
             float Direction, MaxVelocity;
             int BlockX, BlockY, Clicked, TimeOfFlight;
             int Resistance;
-            AtPhys::Interactable Interactable;
+            AtObjects::Interactable Interactable;
             std::string Index, Name, Value;
             std::vector< std::vector<float> > CollisionQueue;
             std::vector<int> EventQueue;

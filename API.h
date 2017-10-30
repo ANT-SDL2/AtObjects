@@ -3,13 +3,13 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-#ifndef NEOPHYSICS_API_H
-#define NEOPHYSICS_API_H
+#ifndef NEOOBJECTS_API_H
+#define NEOOBJECTS_API_H
 
 #include <AtTools/AtTools.h>
 #include <iostream>
 
-namespace AtPhys {
+namespace AtObjects {
     template <class StateType, class BaseType>
     class API {
         //Members

@@ -2,7 +2,7 @@
 #include "Interactable.h"
 #include <AtTools/AtTools.h>
 
-namespace AtPhys {
+namespace AtObjects {
     float Interactable::CollisionHeight() {
         if (CollisionSize.Y()) return CollisionSize.Y(); else return Size.Y();
     }

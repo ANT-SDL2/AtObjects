@@ -1,6 +1,6 @@
 //Interactable.h
-#ifndef NEOPHYSICS_INTERACTABLE_H
-#define NEOPHYSICS_INTERACTABLE_H
+#ifndef NEOOBJECTS_INTERACTABLE_H
+#define NEOOBJECTS_INTERACTABLE_H
 
 #include "Vector2.h"
 #include <string>
@@ -13,7 +13,7 @@ namespace Axis {
     static const int XY                 = 3;
 }
 
-namespace AtPhys {
+namespace AtObjects {
     namespace Shapes {
         static const int Rectangle  = 1;
         static const int Disk       = 2;

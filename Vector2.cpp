@@ -2,7 +2,7 @@
 #include "Vector2.h"
 #include <math.h>
 
-namespace AtPhys {
+namespace AtObjects {
     void Vector2::operator=(Vector2 Vector) {
         x = Vector.X();
         y = Vector.Y();

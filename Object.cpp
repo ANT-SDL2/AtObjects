@@ -1,11 +1,11 @@
 //Object.cpp
 #include "Object.h"
-#include "Functions.h"
+#include "Physics.h"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
 
-namespace AtPhys {
+namespace AtObjects {
     void Object::AccelerateTowards(float Direction, float Velocity) {
         Acceleration = Vector2(cosf(Direction)*Velocity, sinf(Direction)*Velocity);
         Interactable.Relax();
@@ -620,9 +620,9 @@ namespace AtPhys {
 
     void Object::OffsetChildren(int Axis, float Position) {
         if (Axis == Axis::X) {
-            ChildrenOffset = AtPhys::Vector2(Position, ChildrenOffset.Y());
+            ChildrenOffset = AtObjects::Vector2(Position, ChildrenOffset.Y());
         } else if (Axis == Axis::Y) {
-            ChildrenOffset = AtPhys::Vector2(ChildrenOffset.X(), Position);
+            ChildrenOffset = AtObjects::Vector2(ChildrenOffset.X(), Position);
         }
     }
 

@@ -1,11 +1,11 @@
-//Functions.cpp
-#include "Functions.h"
+//Physics.cpp
+#include "Physics.h"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
 #include <AtTools/AtTools.h>
 
-namespace AtPhys {
+namespace AtObjects {
     float CalculateDrag(float Velocity, float DragCoefficient, float Area) {
         return 0.5f*powf(Velocity, 2)*DragCoefficient*Area;
     }

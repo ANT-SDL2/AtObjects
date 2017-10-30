@@ -1,8 +1,8 @@
 //Vector2.h
-#ifndef NEOPHYSICS_VECTOR2_H
-#define NEOPHYSICS_VECTOR2_H
+#ifndef NEOOBJECTS_VECTOR2_H
+#define NEOOBJECTS_VECTOR2_H
 
-namespace AtPhys {
+namespace AtObjects {
     class Vector2 {
         //Members
         protected:
