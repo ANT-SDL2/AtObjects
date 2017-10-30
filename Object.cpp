@@ -1,6 +1,7 @@
 //Object.cpp
 #include "Object.h"
 #include "Physics.h"
+#include "Renderer.h"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
@@ -253,6 +254,19 @@ namespace AtObjects {
                 default:
                     break;
             }
+
+            //EventHandler
+            int Event = Renderable.HandleEvents();
+            switch(Event) {
+                case AtObjects::Events::AnimationChange:
+                    OnAnimationChange(&Renderable);
+                    break;
+                case AtObjects::Events::TextureChange:
+                    OnTextureChange();
+                    break;
+                default:
+                    break;
+            }
         }
 
         return Event;
@@ -280,6 +294,10 @@ namespace AtObjects {
 
     Interactable *Object::GetInteractable() {
         return &Interactable;
+    }
+
+    Renderable *Object::GetRenderable() {
+        return &Renderable;
     }
 
     std::string Object::GetValue() {
@@ -626,6 +644,9 @@ namespace AtObjects {
         }
     }
 
+    void Object::OnAnimationChange(AtObjects::Renderable *Renderable) {
+    }
+
     void Object::OnHide() {
     }
 
@@ -668,6 +689,15 @@ namespace AtObjects {
     }
 
     void Object::OnStop() {
+    }
+
+    void Object::OnTextureChange() {
+        //Backup AutoSize
+        if (!AutoSize) {
+            Texture* Texture = Renderable.GetTexture();
+            if (!Width() && Texture && Texture->GetWidth() > 1) Resize(Axis::X, Texture->GetWidth());
+            if (!Height() && Texture && Texture->GetHeight() > 1) Resize(Axis::Y, Texture->GetHeight());
+        }
     }
 
     void Object::OnValueChange() {
@@ -953,6 +983,64 @@ namespace AtObjects {
                 Clicked = 0;
             }
         } else EventQueue.push_back(Event);
+    }
+
+    void Object::RenderShape(float Interpolation, int DebugState) {
+        //if (Name == "FramesPerSecondMessage") std::cout << Focus << std::endl;
+
+        //if (IsShown(true)) {
+            float R, G, B, A;
+
+            if (DebugState == 1) {
+                R = 1.0f;
+                G = 0.2f;
+                B = 0.3f;
+                A = 1.0f;
+            } else if (DebugState == 2) {
+                R = 0.2f;
+                G = 1.0f;
+                B = 0.3f;
+                A = 1.0f;
+            } else if (DebugState == 3) {
+                R = 1.0f;
+                G = 1.0f;
+                B = 0.3f;
+                A = 1.0f;
+            } else {
+                R = 0.2f;
+                G = 0.3f;
+                B = 1.0f;
+                A = 1.0f;
+            }
+
+            if (IsHovered() || DebugState) {
+                if (IsClicked(SDL_BUTTON_LEFT) || IsClicked(SDL_BUTTON_RIGHT)) {
+                    AtObjects::Renderer::SetColor(R, G, B, A);
+                } else {
+                    AtObjects::Renderer::SetColor(R*0.75f, G*0.75f, B*0.75f, A);
+                }
+            }
+
+            if (IsHovered() || DebugState) {
+                Scaled = true;
+                int Shape = Interactable.Shape;
+                if (Shape == AtObjects::Shapes::Rectangle) {
+                    float TargetX = X(Interpolation, Reference::Origin);
+                    float TargetY = Y(Interpolation, Reference::Origin);
+                    AtObjects::Renderer::RenderRectangle(TargetX, TargetY, Width(), Height(), false);
+
+                    AtObjects::Renderer::RenderRectangle(TargetX, TargetY, 4, 4, true);
+                    AtObjects::Renderer::RenderRectangle(TargetX+Width()-4, TargetY, 4, 4, true);
+                    AtObjects::Renderer::RenderRectangle(TargetX+Width()-4, TargetY+Height()-4, 4, 4, true);
+                    AtObjects::Renderer::RenderRectangle(TargetX, TargetY+Height()-4, 4, 4, true);
+                } else if (Shape == AtObjects::Shapes::Disk) {
+                    float TargetCenterX = X(Reference::Origin, Position::Center, 1)+InterpolateX(Interpolation);
+                    float TargetCenterY = Y(Reference::Origin, Position::Center, 1)+InterpolateY(Interpolation);
+                    AtObjects::Renderer::RenderDisk(TargetCenterX, TargetCenterY, Width()/2.f, Height()/2.f, false);
+                }
+                Scaled = false;
+            }
+        //}
     }
 
     void Object::ResetInput() {

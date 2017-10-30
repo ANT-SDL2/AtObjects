@@ -4,7 +4,6 @@
 
 #include "Texture.h"
 #include "Animation.h"
-#include "Object.h"
 
 namespace AtObjects {
     namespace Color {

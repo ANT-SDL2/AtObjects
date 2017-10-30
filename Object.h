@@ -6,6 +6,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "Interactable.h"
+#include "Renderable.h"
 #include "Vector2.h"
 
 namespace Reference {
@@ -51,7 +52,8 @@ namespace AtObjects {
             float Direction, MaxVelocity;
             int BlockX, BlockY, Clicked, TimeOfFlight;
             int Resistance;
-            AtObjects::Interactable Interactable;
+            Interactable Interactable;
+            Renderable Renderable;
             std::string Index, Name, Value;
             std::vector< std::vector<float> > CollisionQueue;
             std::vector<int> EventQueue;
@@ -78,6 +80,7 @@ namespace AtObjects {
             std::string GetID();
             std::string GetIndex();
             class Interactable *GetInteractable();
+            AtObjects::Renderable *GetRenderable();
             std::string GetName();
             std::string GetValue();
             float Height(int State = 1);
@@ -132,6 +135,7 @@ namespace AtObjects {
             void ProcessCollisions();
             void PushCollision(int Axis, float AdjustX, float AdjustY);
             void PushEvent(int Event, bool Force = false);
+            void RenderShape(float Interpolation, int DebugState);
             void ResistDrag(int Resistance);
             void ResetInput();
             void Resize(int Axis, float Size);
@@ -149,6 +153,7 @@ namespace AtObjects {
             void Toggle();
             void Who();
         protected:
+            virtual void OnAnimationChange(AtObjects::Renderable *Renderable);
             virtual int OnInput(SDL_Event &Event);
             virtual void OnCollision();
             virtual void OnDrag();
@@ -165,6 +170,7 @@ namespace AtObjects {
             virtual void OnRightButtonUp();
             virtual void OnShow();
             virtual void OnStop();
+            virtual void OnTextureChange();
             virtual void OnValueChange();
             void ProcessVelocity();
             void Update();

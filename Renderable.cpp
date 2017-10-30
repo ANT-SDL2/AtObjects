@@ -1,6 +1,7 @@
 //Renderable.cpp
 #include "Renderable.h"
 #include "Renderer.h"
+#include "Object.h"
 #include <iostream>
 #include <math.h>
 
