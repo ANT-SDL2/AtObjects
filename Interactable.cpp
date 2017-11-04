@@ -1,6 +1,8 @@
 //Interactable.cpp
 #include "Interactable.h"
-#include <AtTools/AtTools.h>
+#include <AtUtility/Strings.h>
+
+using namespace AtUtility;
 
 namespace AtObjects {
     float Interactable::CollisionHeight() {
@@ -39,10 +41,10 @@ namespace AtObjects {
         }
 
         if (CollisionMap != "") {
-            int Tiles = AtTools::Strings::FindTotalOf(';', CollisionMap);
+            int Tiles = Strings::FindTotalOf(';', CollisionMap);
 
             for (int i=0; i<Tiles; i++) {
-                int Tile = AtTools::Strings::StringTo<int>(CollisionMap, ';', i);
+                int Tile = Strings::StringTo<int>(CollisionMap, ';', i);
                 this->CollisionMap.push_back(Tile);
             }
         }

@@ -16,7 +16,7 @@ namespace AtObjects {
         //Members
         protected:
             float BonusDuration;
-            AtObjects::Animation *Animation;
+            Animation *Animation;
             AtObjects::Texture *Texture;
             int AnimationDuration, AnimationProgress, AnimationTile, AnimationTileProgress, AnimationQueue, Color[4], HoverColor[4], IdleColor[4], DisabledColor[4], Tile;
             std::string Animationset, TextureID;
@@ -40,8 +40,9 @@ namespace AtObjects {
         public:
             void ProcessAnimation();
             void PushAnimation(int Animation);
-            void RenderAsDialog(float TargetX, float TargetY, int Width = 0, int Height = 0);
-            void RenderAsTexture(float TargetX, float TargetY, int Width = 0, int Height = 0, float ClipWidth = 1.0f, float ClipHeight = 1.0f, float ClipX = 0.f, float ClipY = 0.f);
+            void RenderAsArea(std::vector< std::vector<int> > &TileMap, float TargetX, float TargetY, float Width = 0, float Height = 0, AtObjects::Texture *Texture = NULL);
+            void RenderAsDialog(float TargetX, float TargetY, int Width = 0, int Height = 0, AtObjects::Texture *Texture = NULL);
+            void RenderAsTexture(float TargetX, float TargetY, int Width = 0, int Height = 0, float ClipWidth = 1.0f, float ClipHeight = 1.0f, float ClipX = 0.f, float ClipY = 0.f, AtObjects::Texture *Texture = NULL, bool OverrideColour = false);
             void ResetAnimation();
             void SetAnimation(AtObjects::Animation *Animation);
             void SetAnimationDuration(int AnimationDuration);
@@ -54,6 +55,8 @@ namespace AtObjects {
             void SetTexture(AtObjects::Texture *Texture);
             void SetTextureID(std::string TextureID);
             void SetTransparency(float Transparency);
+        protected:
+            void Render(AtObjects::Texture *Texture, float TargetX, float TargetY, float Width = 0, float Height = 0, int Tile = 0, float ClipWidth = 1.0f, float ClipHeight = 1.0f, float ClipX = 0.f, float ClipY = 0.f);
     };
 }
 

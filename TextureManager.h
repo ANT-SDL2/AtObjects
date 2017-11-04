@@ -3,11 +3,13 @@
 #define NEOOBJECTS_TEXTUREMANAGER_H
 
 #include <sstream>
-#include <AtTools/AtTools.h>
+#include <AtUtility/Strings.h>
 #include "Animation.h"
 #include "Texture.h"
 #include "Renderable.h"
 #include "List.h"
+
+using namespace AtUtility;
 
 namespace AtObjects {
     class TextureManager {
@@ -112,12 +114,12 @@ namespace AtObjects {
 
                 //Color
                 if (Data[2] != "") {
-                    for (int i = 0; i<3; i++) Color[i] = AtTools::Strings::StringTo<int>(Data[2], ' ', i);
+                    for (int i = 0; i<3; i++) Color[i] = Strings::StringTo<int>(Data[2], ' ', i);
                 }
 
                 //Transparency
                 if (Data[3] != "") {
-                    Color[3] = AtTools::Strings::StringTo<float>(Data[3])*255.0f/100.0f;
+                    Color[3] = Strings::StringTo<float>(Data[3])*255.0f/100.0f;
                 }
 
                 AtObjects::Renderable *Renderable = Object->GetRenderable();
@@ -126,7 +128,7 @@ namespace AtObjects {
                 //Hover Color
                 if (Data[4] != "") {
                     int HoverColor[4];
-                    for (int i = 0; i<3; i++) HoverColor[i] = AtTools::Strings::StringTo<int>(Data[4], ' ', i);
+                    for (int i = 0; i<3; i++) HoverColor[i] = Strings::StringTo<int>(Data[4], ' ', i);
 
                     //Transparency
                     HoverColor[3] = 255;

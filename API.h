@@ -6,8 +6,12 @@
 #ifndef NEOOBJECTS_API_H
 #define NEOOBJECTS_API_H
 
-#include <AtTools/AtTools.h>
 #include <iostream>
+
+#include <AtUtility/Strings.h>
+#include <AtUtility/Lua.h>
+
+using namespace AtUtility;
 
 namespace AtObjects {
     template <class StateType, class BaseType>
@@ -137,8 +141,8 @@ namespace AtObjects {
 
                     if (Arguments == 1) {
                         std::string Resolution = lua_tostring(Lua, 1);
-                        int Width = AtTools::Strings::StringTo<int>(Resolution, 'x');
-                        int Height = AtTools::Strings::StringTo<int>(Resolution, 'x', 1);
+                        int Width = Strings::StringTo<int>(Resolution, 'x');
+                        int Height = Strings::StringTo<int>(Resolution, 'x', 1);
 
                         ObjectManager->SetResolution(Width, Height);
                     } else std::cerr << "(AtPhys/API.h) SetResolution(): Function called with invalid number of arguments (" << Arguments << ")." << std::endl;
@@ -514,7 +518,7 @@ namespace AtObjects {
                     BaseType *Object = GetObject<BaseType>(Lua);
                     if (Object && FunctionName != "") {
                         std::string Script = Object->GetID() + ":" + FunctionName + "(); ";
-                        AtTools::Lua::ExecuteScript(Lua, Script.c_str());
+                        Lua::ExecuteScript(Lua, Script.c_str());
                     }
                 } else std::cerr << "(AtPhys/API.h) ObjectCallFunction(): Function called with invalid number of arguments (" << Arguments << ")." << std::endl;
 
@@ -860,7 +864,7 @@ namespace AtObjects {
                     BaseType *Object = GetObject<BaseType>(Lua);
                     if (Object && FunctionName != "") {
                         std::string Script = "function " + Object->GetID() + ":" + FunctionName + "() " + FunctionContent + " end";
-                        AtTools::Lua::ExecuteScript(Lua, Script.c_str());
+                        Lua::ExecuteScript(Lua, Script.c_str());
                     }
                 } else std::cerr << "(AtPhys/API.h) ObjectSetFunction(): Function called with invalid number of arguments (" << Arguments << ")." << std::endl;
 
@@ -879,7 +883,7 @@ namespace AtObjects {
                     BaseType *Object = GetObject<BaseType>(Lua);
                     if (Object) {
                         std::string Script = Object->GetID() + "." + LuaIndex + " = " + Value + ";";
-                        AtTools::Lua::ExecuteScript(Lua, Script.c_str());
+                        Lua::ExecuteScript(Lua, Script.c_str());
                     }
                 } else std::cerr << "(AtPhys/API.h) ObjectSetMember(): Function called with invalid number of arguments (" << Arguments << ")." << std::endl;
 

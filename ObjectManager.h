@@ -7,10 +7,11 @@
 #include <map>
 #include <math.h>
 #include <Lua/lua.hpp>
-#include <AtTools/AtTools.h>
 
 #include "Object.h"
 #include "List.h"
+
+using namespace AtUtility;
 
 namespace AtObjects {
     namespace Input {

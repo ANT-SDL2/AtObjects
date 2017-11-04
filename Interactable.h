@@ -2,9 +2,11 @@
 #ifndef NEOOBJECTS_INTERACTABLE_H
 #define NEOOBJECTS_INTERACTABLE_H
 
-#include "Vector2.h"
+#include <AtUtility/Vector2.h>
 #include <string>
 #include <vector>
+
+using namespace AtUtility;
 
 namespace Axis {
     static const int None               = 0;

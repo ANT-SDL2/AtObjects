@@ -1,6 +1,7 @@
 //TextureManager.cpp
 #include "TextureManager.h"
-#include <AtTools/AtTools.h>
+
+using namespace AtUtility;
 
 namespace AtObjects {
     bool TextureManager::IsAnimationRegistered(std::string Animationset, int AnimationID) {
@@ -38,8 +39,8 @@ namespace AtObjects {
                 //Tile size
                 int Width = 0, Height = 0;
                 if (Data[1] != "") {
-                    Width = AtTools::Strings::StringTo<int>(Data[1], 'x');
-                    Height = AtTools::Strings::StringTo<int>(Data[1], 'x', 1);
+                    Width = Strings::StringTo<int>(Data[1], 'x');
+                    Height = Strings::StringTo<int>(Data[1], 'x', 1);
                 }
 
                 //LinearFiltering

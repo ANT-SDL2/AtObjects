@@ -1,10 +1,14 @@
 //Object.cpp
 #include "Object.h"
-#include "Physics.h"
-#include "Renderer.h"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
+
+#include <AtUtility/Collision.h>
+#include <AtUtility/Renderer.h>
+#include <AtUtility/Vector2.h>
+
+using namespace AtUtility;
 
 namespace AtObjects {
     void Object::AccelerateTowards(float Direction, float Velocity) {
@@ -140,6 +144,102 @@ namespace AtObjects {
 
     float Object::ClipY() {
         return ClipPosition.Y();
+    }
+
+    bool Object::DetectCollisionWith(Object *Object, int &Axis, float &AdjustX, float &AdjustY, float Interpolation) {
+        bool Collision = false;
+
+        if (this != Object) {
+            class Interactable *Interactable2 = Object->GetInteractable();
+            int Shape1 = Interactable.Shape;
+            int Shape2 = Interactable2->Shape;
+            if (Shape1 == Shapes::Rectangle) {
+                float X1 = X(Interpolation, Reference::Collision), Y1 = Y(Interpolation, Reference::Collision);
+                float Width1 = CollisionWidth(), Height1 = CollisionHeight();
+                float Direction1 = GetDirection();
+
+                if (Shape2 == Shapes::Rectangle) {
+                    float X2 = Object->X(Interpolation, Reference::Collision), Y2 = Object->Y(Interpolation, Reference::Collision);
+                    float Width2 = Object->CollisionWidth(), Height2 = Object->CollisionHeight();
+                    float Direction2 = Object->GetDirection();
+
+                    Collision = Collision::RectangleInRectangle(X1, Y1, Width1, Height1, Direction1, X2, Y2, Width2, Height2, Direction2, AdjustX, AdjustY);
+                } else if (Shape2 == Shapes::Disk) {
+                    float X2 = Object->X(Interpolation, Reference::Origin, Position::Center), Y2 = Object->Y(Interpolation, Reference::Origin, Position::Center);
+                    float R2 = Object->CollisionWidth()/2.f;
+                    float r2 = Object->CollisionHeight()/2.f;
+                    float Angle2 = Interactable2->Section()*2.f*M_PI;
+                    float Direction2 = Object->GetDirection();
+
+                    Collision = Collision::DiskInRectangle(X2, Y2, R2, r2, Angle2, Direction2, X1, Y1, Width1, Height1, Direction1, AdjustX, AdjustY);
+                    //if (Object->GetName() == "Neotms" && GetName() == "AreaCollision") std::cout << AdjustX << " " << AdjustY << std::endl;
+                }
+            } else if (Shape1 == Shapes::Disk) {
+                float X1 = X(Interpolation, Reference::Origin, Position::Center), Y1 = Y(Interpolation, Reference::Origin, Position::Center);
+                float R1 = CollisionWidth()/2.f;
+                float r1 = CollisionHeight()/2.f;
+                float Angle1 = Interactable.Section()*2.f*M_PI;
+                float Direction1 = GetDirection();
+
+                if (Shape2 == Shapes::Rectangle) {
+                    float X2 = Object->X(Interpolation, Reference::Collision), Y2 = Object->Y(Interpolation, Reference::Collision);
+                    float Width2 = Object->CollisionWidth(), Height2 = Object->CollisionHeight();
+                    float Direction2 = Object->GetDirection();
+
+                    Collision = Collision::DiskInRectangle(X1, Y1, R1, r1, Angle1, Direction1, X2, Y2, Width2, Height2, Direction2, AdjustX, AdjustY);
+                    //if (GetName() == "Neotms" && Object->GetName() == "AreaCollision") std::cout << AdjustX << " " << AdjustY << std::endl;
+                } else if (Shape2 == Shapes::Disk) {
+                    float X2 = Object->X(Interpolation, Reference::Origin, Position::Center), Y2 = Object->Y(Interpolation, Reference::Origin, Position::Center);
+                    float R2 = Object->CollisionWidth()/2.f;
+                    float r2 = Object->CollisionHeight()/2.f;
+                    float Angle2 = Interactable2->Section()*2.f*M_PI;
+                    float Direction2 = Object->GetDirection();
+
+                    Collision = Collision::DiskInDisk(X1, Y1, R1, r1, Angle1, Direction1, X2, Y2, R2, r2, Angle2, Direction2, AdjustX, AdjustY);
+                }
+            }
+
+            if (!Interactable.IsCollidable() || !Interactable2->IsCollidable()) {
+                AdjustX = AdjustY = 0;
+            }
+
+            //Determine collision axis
+            if (Shape1 == Shapes::Disk && Shape2 == Shapes::Disk) {
+                if (fabs(AdjustX) > fabs(AdjustY)) {
+                    Axis = Axis::X;
+                } else if (fabs(AdjustY) > fabs(AdjustX)) {
+                    Axis = Axis::Y;
+                } else {
+                    Vector2 Vector = Vector2(X()-Object->X(), Y()-Object->Y());
+                    float Angle = Vector.Angle();
+                    if (Angle >= M_PI) Axis = Axis::XY; else Axis = -Axis::XY;
+                }
+            } else {
+                if (AdjustX && AdjustY) {
+                    if (fabs(AdjustX) < fabs(AdjustY)) {
+                        Axis = Axis::X;
+                    } else if (fabs(AdjustY) < fabs(AdjustX)) {
+                        Axis = Axis::Y;
+                    } else {
+                        Axis = Axis::XY;
+                        /*
+                        if (Object1->IsBlocked(Axis::X)) {
+                            Axis = Axis::X;
+                        } else if (Object1->IsBlocked(Axis::Y)) {
+                            Axis = Axis::Y;
+                        }
+                        */
+                    }
+                } else {
+                    if (!AdjustX) Axis = Axis::X;
+                    if (!AdjustY) Axis = Axis::Y;
+                }
+            }
+
+            //if (Object1->GetName() == "Neotms" && Object2->GetName() == "TestCollision2") std::cout << "R: " << Collision << " " << AdjustX << " " << AdjustY << " " << Axis << " " << Interpolation << std::endl;
+        }
+
+        return Collision;
     }
 
     float Object::DistanceFrom(Object *Object) {
@@ -352,12 +452,12 @@ namespace AtObjects {
                         if (InputClipY <= 0) InputClipY = 0; else if (InputClipY > 1) InputClipY = 1;
 
                         float InputWidthClipped = InputClipWidth*(1-InputClipX)*InputWidth, InputHeightClipped = InputClipHeight*(1-InputClipY)*InputHeight;
-                        HoverCheck = PointInRectangle(Event.motion.x, Event.motion.y, X(Reference::Origin, InputClipX), Y(Reference::Origin, InputClipY), InputWidthClipped, InputHeightClipped, Direction);
+                        HoverCheck = Collision::PointInRectangle(Event.motion.x, Event.motion.y, X(Reference::Origin, InputClipX), Y(Reference::Origin, InputClipY), InputWidthClipped, InputHeightClipped, Direction);
                         //if (Name == "MainScreenUI") std::cout << HoverCheck << " " << Event.motion.x << " " << X(Reference::Origin, InputClipX) << " " << Event.motion.y << " " << Y(Reference::Origin, InputClipY) << " " << InputWidthClipped << " " << InputHeightClipped << " " << ClipPosition.X() << " " << ClipPosition.Y() << std::endl;
                     } else if (Shape == Shapes::Disk) {
-                        HoverCheck = PointInDisk(Event.motion.x, Event.motion.y, X(Reference::Origin, Position::Center), Y(Reference::Origin, Position::Center), InputWidth/2.f, InputHeight/2.f, Interactable.Section()*2.f*M_PI, Direction);
+                        HoverCheck = Collision::PointInDisk(Event.motion.x, Event.motion.y, X(Reference::Origin, Position::Center), Y(Reference::Origin, Position::Center), InputWidth/2.f, InputHeight/2.f, Interactable.Section()*2.f*M_PI, Direction);
                     } else if (Shape == Shapes::Triangle) {
-                        HoverCheck = PointInTriangle(Event.motion.x, Event.motion.y, X(), Y(), InputWidth, InputHeight, Direction);
+                        HoverCheck = Collision::PointInTriangle(Event.motion.x, Event.motion.y, X(), Y(), InputWidth, InputHeight, Direction);
                     }
 
                     if (HoverCheck) {
@@ -385,7 +485,7 @@ namespace AtObjects {
                     //Drag and resize events
                     if (Event.type == SDL_MOUSEMOTION) {
                         if (IsClicked(SDL_BUTTON_LEFT)) {
-                            if ((Interactable.IsResizable()) && PointInRectangle(DragReference.X(), DragReference.Y(), ResizeReference.X()-5, ResizeReference.Y()-5, 5, 5, Direction)) {
+                            if ((Interactable.IsResizable()) && Collision::PointInRectangle(DragReference.X(), DragReference.Y(), ResizeReference.X()-5, ResizeReference.Y()-5, 5, 5, Direction)) {
                                 ResizeRequest = Vector2(Event.motion.x-X(), Event.motion.y-Y());
                                 Input = Events::Resize;
                                 if (EventQueue.back() != Events::Resize) EventQueue.push_back(Events::Resize);
@@ -638,9 +738,9 @@ namespace AtObjects {
 
     void Object::OffsetChildren(int Axis, float Position) {
         if (Axis == Axis::X) {
-            ChildrenOffset = AtObjects::Vector2(Position, ChildrenOffset.Y());
+            ChildrenOffset = Vector2(Position, ChildrenOffset.Y());
         } else if (Axis == Axis::Y) {
-            ChildrenOffset = AtObjects::Vector2(ChildrenOffset.X(), Position);
+            ChildrenOffset = Vector2(ChildrenOffset.X(), Position);
         }
     }
 
@@ -889,7 +989,7 @@ namespace AtObjects {
                     } else Angle = !this->Acceleration?Velocity.Angle():this->Acceleration.Angle();
 
                     float EffectiveArea = fabs(sin(Angle-Direction))*CollisionWidth() + fabs(cos(Angle-Direction))*CollisionHeight();
-                    float Drag = CalculateDrag(Vo, 5e-4f*EffectiveArea, EffectiveArea);
+                    float Drag = Collision::CalculateDrag(Vo, 5e-4f*EffectiveArea, EffectiveArea);
 
                     Acceleration = AccelerationFactor-Drag;
 
@@ -1015,9 +1115,9 @@ namespace AtObjects {
 
             if (IsHovered() || DebugState) {
                 if (IsClicked(SDL_BUTTON_LEFT) || IsClicked(SDL_BUTTON_RIGHT)) {
-                    AtObjects::Renderer::SetColor(R, G, B, A);
+                    Renderer::SetColor(R, G, B, A);
                 } else {
-                    AtObjects::Renderer::SetColor(R*0.75f, G*0.75f, B*0.75f, A);
+                    Renderer::SetColor(R*0.75f, G*0.75f, B*0.75f, A);
                 }
             }
 
@@ -1027,16 +1127,16 @@ namespace AtObjects {
                 if (Shape == AtObjects::Shapes::Rectangle) {
                     float TargetX = X(Interpolation, Reference::Origin);
                     float TargetY = Y(Interpolation, Reference::Origin);
-                    AtObjects::Renderer::RenderRectangle(TargetX, TargetY, Width(), Height(), false);
+                    Renderer::RenderRectangle(TargetX, TargetY, Width(), Height(), false);
 
-                    AtObjects::Renderer::RenderRectangle(TargetX, TargetY, 4, 4, true);
-                    AtObjects::Renderer::RenderRectangle(TargetX+Width()-4, TargetY, 4, 4, true);
-                    AtObjects::Renderer::RenderRectangle(TargetX+Width()-4, TargetY+Height()-4, 4, 4, true);
-                    AtObjects::Renderer::RenderRectangle(TargetX, TargetY+Height()-4, 4, 4, true);
+                    Renderer::RenderRectangle(TargetX, TargetY, 4, 4, true);
+                    Renderer::RenderRectangle(TargetX+Width()-4, TargetY, 4, 4, true);
+                    Renderer::RenderRectangle(TargetX+Width()-4, TargetY+Height()-4, 4, 4, true);
+                    Renderer::RenderRectangle(TargetX, TargetY+Height()-4, 4, 4, true);
                 } else if (Shape == AtObjects::Shapes::Disk) {
                     float TargetCenterX = X(Reference::Origin, Position::Center, 1)+InterpolateX(Interpolation);
                     float TargetCenterY = Y(Reference::Origin, Position::Center, 1)+InterpolateY(Interpolation);
-                    AtObjects::Renderer::RenderDisk(TargetCenterX, TargetCenterY, Width()/2.f, Height()/2.f, false);
+                    Renderer::RenderDisk(TargetCenterX, TargetCenterY, Width()/2.f, Height()/2.f, false);
                 }
                 Scaled = false;
             }

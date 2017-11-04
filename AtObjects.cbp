@@ -16,7 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add option="-lAtTools-d" />
+					<Add option="-lAtUtility-d" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -30,13 +30,13 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-lAtTools" />
+					<Add option="-lAtUtility" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add directory="../external/include" />
 			<Add directory="../" />
 		</Compiler>
@@ -47,7 +47,7 @@
 			<Add option="-lSDL2_image" />
 			<Add option="-lSDL2" />
 			<Add directory="../external/lib" />
-			<Add directory="../AtTools/bin" />
+			<Add directory="../AtUtility/bin" />
 		</Linker>
 		<Unit filename="API.cpp" />
 		<Unit filename="API.h" />
@@ -71,8 +71,6 @@
 		<Unit filename="Texture.h" />
 		<Unit filename="TextureManager.cpp" />
 		<Unit filename="TextureManager.h" />
-		<Unit filename="Vector2.cpp" />
-		<Unit filename="Vector2.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

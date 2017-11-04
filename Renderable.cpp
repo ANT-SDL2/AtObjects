@@ -1,9 +1,12 @@
 //Renderable.cpp
 #include "Renderable.h"
-#include "Renderer.h"
 #include "Object.h"
 #include <iostream>
 #include <math.h>
+
+#include <AtUtility/Renderer.h>
+
+using namespace AtUtility;
 
 namespace AtObjects {
     bool Renderable::AnimationIsDone() {
@@ -117,6 +120,71 @@ namespace AtObjects {
         AnimationQueue = Animation;
     }
 
+    void Renderable::Render(AtObjects::Texture *Texture, float TargetX, float TargetY, float TargetWidth, float TargetHeight, int TargetTile, float ClipWidth, float ClipHeight, float ClipX, float ClipY) {
+        if (Texture) {
+            int TextureColumns = Texture->GetColumns();
+            int TextureRows = Texture->GetRows();
+            int TextureTiles = Texture->GetTilesNumber();
+            int TextureWidth = Texture->GetWidth(true);
+            int TextureHeight = Texture->GetHeight(true);
+            int TextureTileWidth = Texture->GetWidth();
+            int TextureTileHeight = Texture->GetHeight();
+
+            //Target dimensions
+            if (!TargetWidth) TargetWidth = TextureTileWidth;
+            if (!TargetHeight) TargetHeight = TextureTileHeight;
+
+            //Calculate target column and row
+            int TargetColumn = 1, TargetRow = 1;
+            if (TargetTile > 0 && TargetTile <= TextureTiles) {
+                TargetRow = TargetTile/TextureColumns;
+                if (TargetTile%TextureColumns != 0) TargetRow+=1;
+                TargetColumn = TargetTile-(TargetRow-1)*TextureColumns;
+            }
+
+            //Limit clipping
+            if (ClipWidth > 1) ClipWidth = 1; else if (ClipWidth < 0) ClipWidth = 0;
+            if (ClipHeight > 1) ClipHeight = 1; else if (ClipHeight < 0) ClipHeight = 0;
+            if (ClipX <= 0) ClipX = 0; else if (ClipX > 1) ClipX = 1;
+            if (ClipY <= 0) ClipY = 0; else if (ClipY > 1) ClipY = 1;
+
+            //Quad position
+            float X1 = 0, X2 = 0, X3 = 0, X4 = 0;
+            float Y1 = 0, Y2 = 0, Y3 = 0, Y4 = 0;
+
+            X1 = TargetX+ClipX*TargetWidth; Y1 = TargetY+ClipY*TargetHeight;
+            X2 = TargetX+ClipWidth*TargetWidth; Y2 = TargetY+ClipY*TargetHeight;
+            X3 = TargetX+ClipWidth*TargetWidth; Y3 = TargetY+ClipHeight*TargetHeight;
+            X4 = TargetX+ClipX*TargetWidth; Y4 = TargetY+ClipHeight*TargetHeight;
+
+            //Texture mapping
+            float MappingWidth = TextureTileWidth*(ClipWidth), MappingHeight = TextureTileHeight*(ClipHeight);
+
+            float TextureX1 = (float)(TargetColumn-1+ClipX)/TextureColumns, TextureY1 = (float)(TargetRow-1+ClipY)/TextureRows;
+            float TextureX2 = (float)TargetColumn*MappingWidth/TextureWidth, TextureY2 = (float)(TargetRow-1+ClipY)/TextureRows;
+            float TextureX3 = (float)TargetColumn*MappingWidth/TextureWidth, TextureY3 = (float)TargetRow*MappingHeight/TextureHeight;
+            float TextureX4 = (float)(TargetColumn-1+ClipX)/TextureColumns, TextureY4 = (float)TargetRow*MappingHeight/TextureHeight;
+
+            //Texture mapping fix
+            //float Modifier = 0.25f;
+            //TextureX1 += (float)Modifier/TextureWidth; TextureY1 += (float)Modifier/TextureHeight;
+            //TextureX2 -= (float)Modifier/TextureWidth; TextureY2 += (float)Modifier/TextureHeight;
+            //TextureX3 -= (float)Modifier/TextureWidth; TextureY3 -= (float)Modifier/TextureHeight;
+            //TextureX4 += (float)Modifier/TextureWidth; TextureY4 -= (float)Modifier/TextureHeight;
+
+            //if (FlipX) {Scale(GL_TEXTURE, -1, 1);}
+
+            //Render quad
+            //glLoadIdentity();
+            glBegin(GL_QUADS);
+                glTexCoord2f(TextureX1, TextureY1); glVertex2f(X1, Y1);
+                glTexCoord2f(TextureX2, TextureY2); glVertex2f(X2, Y2);
+                glTexCoord2f(TextureX3, TextureY3); glVertex2f(X3, Y3);
+                glTexCoord2f(TextureX4, TextureY4); glVertex2f(X4, Y4);
+            glEnd();
+        }
+    }
+
     Renderable::Renderable() {
         BonusDuration = 0.f;
         AnimationDuration = AnimationProgress = AnimationTile = AnimationTileProgress = AnimationQueue = Tile = 0;
@@ -126,14 +194,113 @@ namespace AtObjects {
         Texture = NULL;
     }
 
-    void Renderable::RenderAsDialog(float TargetX, float TargetY, int Width, int Height) {
-        AtObjects::Renderer::SetColor(Color[0], Color[1], Color[2], Color[3]);
-        AtObjects::Renderer::RenderDialog(Texture, TargetX, TargetY, Width, Height);
+    void Renderable::RenderAsArea(std::vector< std::vector<int> > &TileMap, float TargetX, float TargetY, float TargetWidth, float TargetHeight, AtObjects::Texture *Texture) {
+        if (!Texture) Texture = this->Texture;
+
+        if (Texture) {
+            float TileWidth = Texture->GetWidth();
+            float TileHeight = Texture->GetHeight();
+            int Columns = 0, Rows = 0;
+
+            if (TileMap.size() > 0) {
+                Columns = TileMap.size();
+                Rows = TileMap[0].size();
+            }
+
+            if (!TargetWidth) TargetWidth = TileWidth;
+            if (!TargetHeight) TargetHeight = TileHeight;
+
+            GLuint GLTexture = Texture->GetGLTexture();
+            glBindTexture(GL_TEXTURE_2D, GLTexture);
+
+            for (int i = 0; i<Columns; i++) {
+                for (int j = 0; j<Rows; j++) {
+                    if (TileMap[i][j]) Render(Texture, TargetX + j*TargetWidth, TargetY + i*TargetHeight, TargetWidth, TargetHeight, TileMap[i][j]);
+                }
+            }
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
     }
 
-    void Renderable::RenderAsTexture(float TargetX, float TargetY, int Width, int Height, float ClipWidth, float ClipHeight, float ClipX, float ClipY) {
-        AtObjects::Renderer::SetColor(Color[0], Color[1], Color[2], Color[3]);
-        AtObjects::Renderer::RenderTexture(Texture, TargetX, TargetY, Width, Height, Tile, ClipWidth, ClipHeight, ClipX, ClipY);
+    void Renderable::RenderAsDialog(float TargetX, float TargetY, int TargetWidth, int TargetHeight, AtObjects::Texture *Texture) {
+        if (!Texture) Texture = this->Texture;
+        Renderer::SetColor(Color[0], Color[1], Color[2], Color[3]);
+
+        if (Texture) {
+            float TileWidth = Texture->GetWidth();
+            float TileHeight = Texture->GetHeight();
+
+            int Columns = TargetWidth/TileWidth-2;
+            int Rows = TargetHeight/TileHeight-2;
+
+            float WidthModulo = fmod(TargetWidth, TileWidth);
+            float HeightModulo = fmod(TargetHeight, TileHeight);
+
+            GLuint GLTexture = Texture->GetGLTexture();
+            glBindTexture(GL_TEXTURE_2D, GLTexture);
+
+            //Border corner (Top left)
+            Render(Texture, TargetX, TargetY, TileWidth, TileHeight, 1);
+            //Border corner (Bottom left)
+            Render(Texture, TargetX, TargetY+TargetHeight-TileHeight, TileWidth, TileHeight, 7);
+
+            //Border fill (Left)
+            if (HeightModulo && Rows > -1) Render(Texture, TargetX, TargetY+(Rows+1) *TileHeight, TileWidth, HeightModulo, 4);
+
+            //Border corner (Top right)
+            Render(Texture, TargetX+TargetWidth-TileWidth, TargetY, TileWidth, TileHeight, 3);
+            //Border corner (Bottom right)
+            Render(Texture, TargetX+TargetWidth-TileWidth, TargetY+TargetHeight-TileHeight, TileWidth, TileHeight, 9);
+
+            //Border fill (Right)
+            if (HeightModulo && Rows > -1) Render(Texture, TargetX+TargetWidth-TileWidth, TargetY+TileHeight *(Rows+1), TileWidth, HeightModulo, 6);
+
+            //Border fill (Top)
+            if (WidthModulo && Columns > -1) Render(Texture, TargetX+TileWidth*(Columns+1), TargetY, WidthModulo, TileHeight, 2);
+            //Border fill (Bottom)
+            if (WidthModulo && Columns > -1) Render(Texture, TargetX+TileWidth*(Columns+1), TargetY+TargetHeight-TileHeight, WidthModulo, TileHeight, 8);
+
+            for (int j = 0; j<Columns; j++) {
+                //Border (Top)
+                Render(Texture, TargetX+TileWidth *(j+1), TargetY, TileWidth, TileHeight, 2);
+                //Border (Bottom)
+                Render(Texture, TargetX+TileWidth *(j+1), TargetY+TargetHeight-TileHeight, TileWidth, TileHeight, 8);
+
+                //Content fill (Bottom)
+                if (HeightModulo && Rows > -1) Render(Texture, TargetX+TileWidth*(j+1), TargetY+(Rows+1)*TileHeight, TileWidth, HeightModulo, 5);
+            }
+
+            for (int i = 0; i<Rows; ++i) {
+                //Border (Left)
+                Render(Texture, TargetX, TargetY+TileHeight *(i+1), TileWidth, TileHeight, 4);
+                //Border (Right)
+                Render(Texture, TargetX+TargetWidth-TileWidth, TargetY+TileHeight*(i+1), TileWidth, TileHeight, 6);
+
+                //Content
+                for (int j = 0; j<Columns; j++) Render(Texture, TargetX+TileWidth*(j+1), TargetY+TileHeight*(i+1), TileWidth, TileHeight, 5);
+
+                //Content fill (Right)
+                if (WidthModulo && Columns > -1) Render(Texture, TargetX+TileWidth*(Columns+1), TargetY+TileHeight*(i+1), WidthModulo, TileHeight, 5);
+            }
+
+            //Content fill (Bottom right)
+            if (WidthModulo && HeightModulo && Columns > -1 && Rows > -1) Render(Texture, TargetX+TileWidth*(Columns+1), TargetY+TileHeight*(Rows+1), WidthModulo, HeightModulo, 5);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+    }
+
+    void Renderable::RenderAsTexture(float TargetX, float TargetY, int TargetWidth, int TargetHeight, float ClipWidth, float ClipHeight, float ClipX, float ClipY, AtObjects::Texture *Texture, bool OverrideColour) {
+        if (!Texture) Texture = this->Texture;
+        if (!OverrideColour) Renderer::SetColor(Color[0], Color[1], Color[2], Color[3]);
+
+        if (Texture) {
+            GLuint GLTexture = Texture->GetGLTexture();
+            glBindTexture(GL_TEXTURE_2D, GLTexture);
+            Render(Texture, TargetX, TargetY, TargetWidth, TargetHeight, Tile, ClipWidth, ClipHeight, ClipX, ClipY);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
     }
 
     void Renderable::ResetAnimation() {

@@ -7,7 +7,9 @@
 #include <SDL2/SDL.h>
 #include "Interactable.h"
 #include "Renderable.h"
-#include "Vector2.h"
+#include <AtUtility/Vector2.h>
+
+using namespace AtUtility;
 
 namespace Reference {
     static const int Origin             = 0;
@@ -115,6 +117,7 @@ namespace AtObjects {
             void AccelerateTowards(float Direction, float Acceleration);
             void AnchorAt(float HorizontalAnchor, float VerticalAnchor);
             void Block(int Axis);
+            bool DetectCollisionWith(Object *Object, int &Axis, float &AdjustX, float &AdjustY, float Interpolation);
             void DropAt(float X, float Y);
             void Enable(bool State);
             void EnableAutoSize(bool State);
