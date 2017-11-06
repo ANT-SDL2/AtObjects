@@ -1248,7 +1248,7 @@ namespace AtObjects {
         //Update size
         float ScreenWidth = Interactable.Width()+ResizeRate.X();
         float ScreenHeight = Interactable.Height()+ResizeRate.Y();
-        Interactable.ResizeTo(ScreenWidth, ScreenHeight);
+        Interactable.AcquireSize(ScreenWidth, ScreenHeight);
 
         //Process ResizeRate
         ResizeRate = Vector2(Interactable.dWidth(), Interactable.dHeight());

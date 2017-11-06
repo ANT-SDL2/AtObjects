@@ -29,7 +29,7 @@ namespace AtObjects {
         protected:
             bool Collision, Interactive, Movable, Resizable;
             float Sector;
-            Vector2 CollisionSize, InputSize, Position, Size, TargetPosition, TargetSize;
+            Vector2 AcquiredPosition, AcquiredSize, CollisionSize, InputSize, Position, Size, TargetPosition, TargetSize;
             std::vector<int> CollisionMap;
         //Access Methods
         public:
@@ -56,6 +56,7 @@ namespace AtObjects {
             float Y(int State = 1);
         //Process Methods
         public:
+            void AcquireSize(float Width, float Height);
             void DropAt(float X, float Y);
             void EnableCollision(bool State, std::string CollisionMap = "");
             void EnableInteraction(bool State);

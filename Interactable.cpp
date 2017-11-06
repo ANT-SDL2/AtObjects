@@ -5,16 +5,22 @@
 using namespace AtUtility;
 
 namespace AtObjects {
+    void Interactable::AcquireSize(float Width, float Height) {
+        if (Width < 0) Width = AcquiredSize.X();
+        if (Height < 0) Height = AcquiredSize.Y();
+        AcquiredSize = Vector2(Width, Height);
+    }
+
     float Interactable::CollisionHeight() {
-        if (CollisionSize.Y()) return CollisionSize.Y(); else return Size.Y();
+        if (CollisionSize.Y()) return CollisionSize.Y(); else return AcquiredSize.Y();
     }
 
     float Interactable::CollisionWidth() {
-        if (CollisionSize.X()) return CollisionSize.X(); else return Size.X();
+        if (CollisionSize.X()) return CollisionSize.X(); else return AcquiredSize.X();
     }
 
     void Interactable::DropAt(float X, float Y) {
-        Position = Vector2(X, Y);
+        AcquiredPosition = Vector2(X, Y);
     }
 
     float Interactable::dHeight() {
@@ -37,7 +43,7 @@ namespace AtObjects {
         Collision = State;
 
         if (!CollisionSize.X() && !CollisionSize.Y()) {
-            CollisionSize = Size;
+            CollisionSize = AcquiredSize;
         }
 
         if (CollisionMap != "") {
@@ -65,15 +71,19 @@ namespace AtObjects {
     float Interactable::Height(int State) {
         if (State == 2 && TargetSize.Y() != 0) {
             return TargetSize.Y();
-        } else return Size.Y();
+        } else if (State == 3) {
+            return Size.Y();
+        } else {
+            if (Size.Y() < 0) return AcquiredSize.Y(); else return Size.Y();
+        }
     }
 
     float Interactable::InputHeight() {
-        if (InputSize.Y()) return InputSize.Y(); else return Size.Y();
+        if (InputSize.Y()) return InputSize.Y(); else return AcquiredSize.Y();
     }
 
     float Interactable::InputWidth() {
-        if (InputSize.X()) return InputSize.X(); else return Size.X();
+        if (InputSize.X()) return InputSize.X(); else return AcquiredSize.X();
     }
 
     bool Interactable::IsCollidable(int Tile) {
@@ -98,13 +108,15 @@ namespace AtObjects {
 
     Interactable::Interactable() {
         Sector = 0.f;
+        Position = Vector2(-1, -1);
+        Size = Vector2(-1, -1);
         Shape = Shapes::Rectangle;
         Interactive = true;
         Collision = Movable = Resizable = false;
     }
 
     void Interactable::MoveBy(float X, float Y) {
-        if (TargetPosition == Vector2(0, 0)) TargetPosition = Position;
+        if (TargetPosition == Vector2(0, 0)) TargetPosition = AcquiredPosition;
         TargetPosition += Vector2(X, Y);
     }
 
@@ -113,11 +125,11 @@ namespace AtObjects {
     }
 
     void Interactable::NudgeBy(float X, float Y) {
-        Position += Vector2(X, Y);
+        AcquiredPosition += Vector2(X, Y);
     }
 
     float Interactable::Radius() {
-        return (Size.X()+Size.Y())/2.f;
+        return (AcquiredSize.X()+AcquiredSize.Y())/2.f;
     }
 
     void Interactable::Relax(int Axis) {
@@ -169,19 +181,23 @@ namespace AtObjects {
     float Interactable::Width(int State) {
         if (State == 2 && TargetSize.X() != 0) {
             return TargetSize.X();
-        } else return Size.X();
+        } else if (State == 3) {
+            return Size.X();
+        } else {
+            if (Size.X() < 0) return AcquiredSize.X(); else return Size.X();
+        }
     }
 
     float Interactable::X(int State) {
         if (State == 2 && TargetPosition.X() != 0) {
             return TargetPosition.X();
-        } else return Position.X();
+        } else return AcquiredPosition.X();
     }
 
     float Interactable::Y(int State) {
         if (State == 2 && TargetPosition.Y() != 0) {
             return TargetPosition.Y();
-        } else return Position.Y();
+        } else return AcquiredPosition.Y();
     }
 
     Interactable::~Interactable() {

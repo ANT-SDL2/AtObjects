@@ -61,12 +61,8 @@
 		<Unit filename="Object.h" />
 		<Unit filename="ObjectManager.cpp" />
 		<Unit filename="ObjectManager.h" />
-		<Unit filename="Physics.cpp" />
-		<Unit filename="Physics.h" />
 		<Unit filename="Renderable.cpp" />
 		<Unit filename="Renderable.h" />
-		<Unit filename="Renderer.cpp" />
-		<Unit filename="Renderer.h" />
 		<Unit filename="Texture.cpp" />
 		<Unit filename="Texture.h" />
 		<Unit filename="TextureManager.cpp" />

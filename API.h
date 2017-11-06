@@ -290,10 +290,12 @@ namespace AtObjects {
 
                 int Arguments = lua_gettop(Lua);
 
-                if (Arguments == 1) {
+                if (Arguments == 1 || Arguments == 2) {
                     BaseType *Object = GetObject<BaseType>(Lua);
                     if (Object) {
-                        Height = Object->Height();
+                        int State = 1;
+                        if (Arguments == 2) State = lua_tointeger(Lua, 2);
+                        Height = Object->Height(State);
                     }
                 } else std::cerr << "(AtPhys/API.h) ObjectHeight(): Function called with invalid number of arguments (" << Arguments << ")." << std::endl;
 
@@ -420,10 +422,12 @@ namespace AtObjects {
 
                 int Arguments = lua_gettop(Lua);
 
-                if (Arguments == 1) {
+                if (Arguments == 1 || Arguments == 2) {
                     BaseType *Object = GetObject<BaseType>(Lua);
                     if (Object) {
-                        Width = Object->Width();
+                        int State = 1;
+                        if (Arguments == 2) State = lua_tointeger(Lua, 2);
+                        Width = Object->Width(State);
                     }
                 } else std::cerr << "(AtPhys/API.h) ObjectWidth(): Function called with invalid number of arguments (" << Arguments << ")." << std::endl;
 
