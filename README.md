@@ -1,6 +1,6 @@
 # AtObjects
 
-Low-level library containing class definitions and implementations for objects required for a video game engine written in C++.
+Low-level library containing class definitions and implementations for objects used in a video game engine written in C++.
 
 ## Classes
 - **Object:** Base structure used to implement a game object within the application.
