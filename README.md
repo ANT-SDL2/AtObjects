@@ -1,6 +1,6 @@
 # AtObjects
 
-Low-level library containing the fundamental class implementations for interactive and renderable objects used in a 2D video game engine. Manager classes used to load and manage these objects are also implemented in this library.
+Low-level library containing the fundamental class implementations for interactive and renderable objects used in a custom 2D video game engine. Manager classes used to load and manage these objects are also implemented in this library.
 
 ## Classes
 - **Object:** Base structure used to implement a game object within the application.
