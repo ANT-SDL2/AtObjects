@@ -14,7 +14,7 @@ Low-level library containing class definitions and implementations for objects u
 - **API:** API exposing many of the classes and methods defined in the library to a Lua environment. Allows run-time interaction and manipulation of objects created by the library using scripts written in Lua.
 
 ## Dependencies:
+- [AtUtility](https://github.com/atrapalis/AtUtility "AtUtility GitHub repository")
 - Lua 5.2 binding library (lua52)
 - OpenGL 3.2 (glu32, opengl32)
 - SDL2 base and modules (SDL2, SDL2_image, SDL2_ttf)
-- [AtUtility](https://github.com/atrapalis/AtUtility "AtUtility GitHub repository")
