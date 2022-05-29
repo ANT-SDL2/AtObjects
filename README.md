@@ -1,6 +1,8 @@
 # AtObjects
 
-Low-level library containing the fundamental class implementations for interactive and renderable objects used in a custom 2D video game engine. Manager classes used to load and manage these objects are also implemented in this library.
+A low-level game object framework for a 2D game engine written in C++. 
+
+This library implements interactive and renderable objects used in a 2D game engine. Manager classes used to load and manage these objects are also implemented.
 
 ## Compiling
 To compile the source code, it is recommended to use the Code::Blocks project included in this repository. This library has only been tested in Windows environments. 
