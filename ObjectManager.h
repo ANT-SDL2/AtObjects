@@ -11,9 +11,9 @@
 #include "Object.h"
 #include "List.h"
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     namespace Input {
         static const int Keyboard       = 1;
         static const int Joystick       = 2;
@@ -71,7 +71,7 @@ namespace AtObjects {
                 Object->SetParent(Parent);
                 Object->SetName(Name);
                 Object->SetIndex(Index);
-                Object->PushEvent(AtObjects::Events::Load);
+                Object->PushEvent(sdlObjects::Events::Load);
                 Object->ScaleTo(Scale.X(), Scale.Y());
                 /*if (Index == "Settings" && ID == "WindowModeList") {
                     std::cout << Object->ID() << " " << Objects[Index][ID]->ID() << std::endl;

@@ -4,13 +4,13 @@
 #include <iostream>
 #include <math.h>
 
-#include <AtUtility/Collision.h>
-#include <AtUtility/Renderer.h>
-#include <AtUtility/Vector2.h>
+#include <sdlUtility/Collision.h>
+#include <sdlUtility/Renderer.h>
+#include <sdlUtility/Vector2.h>
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     void Object::AccelerateTowards(float Direction, float Velocity) {
         Acceleration = Vector2(cosf(Direction)*Velocity, sinf(Direction)*Velocity);
         Interactable.Relax();
@@ -358,10 +358,10 @@ namespace AtObjects {
             //EventHandler
             int Event = Renderable.HandleEvents();
             switch(Event) {
-                case AtObjects::Events::AnimationChange:
+                case sdlObjects::Events::AnimationChange:
                     OnAnimationChange(&Renderable);
                     break;
-                case AtObjects::Events::TextureChange:
+                case sdlObjects::Events::TextureChange:
                     OnTextureChange();
                     break;
                 default:
@@ -744,7 +744,7 @@ namespace AtObjects {
         }
     }
 
-    void Object::OnAnimationChange(AtObjects::Renderable *Renderable) {
+    void Object::OnAnimationChange(sdlObjects::Renderable *Renderable) {
     }
 
     void Object::OnHide() {
@@ -1124,7 +1124,7 @@ namespace AtObjects {
             if (IsHovered() || DebugState) {
                 Scaled = true;
                 int Shape = Interactable.Shape;
-                if (Shape == AtObjects::Shapes::Rectangle) {
+                if (Shape == sdlObjects::Shapes::Rectangle) {
                     float TargetX = X(Interpolation, Reference::Origin);
                     float TargetY = Y(Interpolation, Reference::Origin);
                     Renderer::RenderRectangle(TargetX, TargetY, Width(), Height(), false);
@@ -1133,7 +1133,7 @@ namespace AtObjects {
                     Renderer::RenderRectangle(TargetX+Width()-4, TargetY, 4, 4, true);
                     Renderer::RenderRectangle(TargetX+Width()-4, TargetY+Height()-4, 4, 4, true);
                     Renderer::RenderRectangle(TargetX, TargetY+Height()-4, 4, 4, true);
-                } else if (Shape == AtObjects::Shapes::Disk) {
+                } else if (Shape == sdlObjects::Shapes::Disk) {
                     float TargetCenterX = X(Reference::Origin, Position::Center, 1)+InterpolateX(Interpolation);
                     float TargetCenterY = Y(Reference::Origin, Position::Center, 1)+InterpolateY(Interpolation);
                     Renderer::RenderDisk(TargetCenterX, TargetCenterY, Width()/2.f, Height()/2.f, false);

@@ -4,7 +4,7 @@
 
 #include "Texture.h"
 #include <vector>
-namespace AtObjects {
+namespace sdlObjects {
     class Animation {
         //Members
         public:

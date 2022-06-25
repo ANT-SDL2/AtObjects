@@ -4,16 +4,16 @@
 #include <iostream>
 #include <math.h>
 
-#include <AtUtility/Renderer.h>
+#include <sdlUtility/Renderer.h>
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     bool Renderable::AnimationIsDone() {
         if (Animation) return (AnimationTile >= Animation->GetTiles()-1 && AnimationProgress >= AnimationDuration); else return true;
     }
 
-    AtObjects::Animation *Renderable::GetAnimation() {
+    sdlObjects::Animation *Renderable::GetAnimation() {
         return Animation;
     }
 
@@ -52,7 +52,7 @@ namespace AtObjects {
         return Return;
     }
 
-    AtObjects::Texture *Renderable::GetTexture() {
+    sdlObjects::Texture *Renderable::GetTexture() {
         return Texture;
     }
 
@@ -120,7 +120,7 @@ namespace AtObjects {
         AnimationQueue = Animation;
     }
 
-    void Renderable::Render(AtObjects::Texture *Texture, float TargetX, float TargetY, float TargetWidth, float TargetHeight, int TargetTile, float ClipWidth, float ClipHeight, float ClipX, float ClipY) {
+    void Renderable::Render(sdlObjects::Texture *Texture, float TargetX, float TargetY, float TargetWidth, float TargetHeight, int TargetTile, float ClipWidth, float ClipHeight, float ClipX, float ClipY) {
         if (Texture) {
             int TextureColumns = Texture->GetColumns();
             int TextureRows = Texture->GetRows();
@@ -194,7 +194,7 @@ namespace AtObjects {
         Texture = NULL;
     }
 
-    void Renderable::RenderAsArea(std::vector< std::vector<int> > &TileMap, float TargetX, float TargetY, float TargetWidth, float TargetHeight, AtObjects::Texture *Texture) {
+    void Renderable::RenderAsArea(std::vector< std::vector<int> > &TileMap, float TargetX, float TargetY, float TargetWidth, float TargetHeight, sdlObjects::Texture *Texture) {
         if (!Texture) Texture = this->Texture;
 
         if (Texture) {
@@ -223,7 +223,7 @@ namespace AtObjects {
         }
     }
 
-    void Renderable::RenderAsDialog(float TargetX, float TargetY, int TargetWidth, int TargetHeight, AtObjects::Texture *Texture) {
+    void Renderable::RenderAsDialog(float TargetX, float TargetY, int TargetWidth, int TargetHeight, sdlObjects::Texture *Texture) {
         if (!Texture) Texture = this->Texture;
         Renderer::SetColor(Color[0], Color[1], Color[2], Color[3]);
 
@@ -291,7 +291,7 @@ namespace AtObjects {
         }
     }
 
-    void Renderable::RenderAsTexture(float TargetX, float TargetY, int TargetWidth, int TargetHeight, float ClipWidth, float ClipHeight, float ClipX, float ClipY, AtObjects::Texture *Texture, bool OverrideColour) {
+    void Renderable::RenderAsTexture(float TargetX, float TargetY, int TargetWidth, int TargetHeight, float ClipWidth, float ClipHeight, float ClipX, float ClipY, sdlObjects::Texture *Texture, bool OverrideColour) {
         if (!Texture) Texture = this->Texture;
         if (!OverrideColour) Renderer::SetColor(Color[0], Color[1], Color[2], Color[3]);
 
@@ -310,7 +310,7 @@ namespace AtObjects {
         if (Animation) Tile = Animation->GetTile(0); else Tile = 0;
     }
 
-    void Renderable::SetAnimation(AtObjects::Animation *Animation) {
+    void Renderable::SetAnimation(sdlObjects::Animation *Animation) {
         if (Animation && Animation->GetState() == AnimationQueue) {
             //if (Animationset == "" && Animation->GetState() != 1) std::cout << Animationset << " set to " << Animation->GetState() << std::endl;
 
@@ -380,7 +380,7 @@ namespace AtObjects {
         this->Tile = Tile;
     }
 
-    void Renderable::SetTexture(AtObjects::Texture *Texture) {
+    void Renderable::SetTexture(sdlObjects::Texture *Texture) {
         if (this->Texture) this->Texture->SetUses(-1);
 
         this->Texture = Texture;

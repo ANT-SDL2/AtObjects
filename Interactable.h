@@ -2,11 +2,11 @@
 #ifndef NEOOBJECTS_INTERACTABLE_H
 #define NEOOBJECTS_INTERACTABLE_H
 
-#include <AtUtility/Vector2.h>
+#include <sdlUtility/Vector2.h>
 #include <string>
 #include <vector>
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
 namespace Axis {
     static const int None               = 0;
@@ -15,7 +15,7 @@ namespace Axis {
     static const int XY                 = 3;
 }
 
-namespace AtObjects {
+namespace sdlObjects {
     namespace Shapes {
         static const int Rectangle  = 1;
         static const int Disk       = 2;

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <math.h>
 
-namespace AtObjects {
+namespace sdlObjects {
     void Animation::AddTile(int Tile, float Weight) {
         Tiles.push_back(Tile);
         Weights.push_back(Weight);

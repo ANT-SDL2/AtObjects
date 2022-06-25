@@ -1,10 +1,10 @@
 //Interactable.cpp
 #include "Interactable.h"
-#include <AtUtility/Strings.h>
+#include <sdlUtility/Strings.h>
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     void Interactable::AcquireSize(float Width, float Height) {
         if (Width < 0) Width = AcquiredSize.X();
         if (Height < 0) Height = AcquiredSize.Y();

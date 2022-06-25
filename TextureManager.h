@@ -3,15 +3,15 @@
 #define NEOOBJECTS_TEXTUREMANAGER_H
 
 #include <sstream>
-#include <AtUtility/Strings.h>
+#include <sdlUtility/Strings.h>
 #include "Animation.h"
 #include "Texture.h"
 #include "Renderable.h"
 #include "List.h"
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     class TextureManager {
         //Members
         protected:
@@ -42,7 +42,7 @@ namespace AtObjects {
     void TextureManager::ProcessAnimationQueue(List<IDType, Type, InheritedType> &List) {
         Type *Object = List.GetFirst();
         while (Object) {
-            AtObjects::Renderable *Renderable = Object->GetRenderable();
+            sdlObjects::Renderable *Renderable = Object->GetRenderable();
             if (Renderable->GetAnimationQueue()) {
                 std::ostringstream Stream;
                 Stream << Renderable->GetAnimationset() << ":" << Renderable->GetAnimationQueue();
@@ -55,7 +55,7 @@ namespace AtObjects {
                 }
             }
 
-            AtObjects::Renderable *LowerRenderable = Object->GetLowerRenderable();
+            sdlObjects::Renderable *LowerRenderable = Object->GetLowerRenderable();
             if (LowerRenderable->GetAnimationQueue()) {
                 std::ostringstream Stream;
                 Stream << LowerRenderable->GetAnimationset() << ":" << LowerRenderable->GetAnimationQueue();
@@ -77,12 +77,12 @@ namespace AtObjects {
     void TextureManager::ReloadListTextures(List<IDType, Type, InheritedType> &List) {
         Type *Object = List.GetFirst();
         while (Object) {
-            AtObjects::Renderable *Renderable = Object->GetRenderable();
+            sdlObjects::Renderable *Renderable = Object->GetRenderable();
             std::string ID = Renderable->GetTextureID();
 
             if (ID != "") {
-                AtObjects::Texture *Texture = Renderable->GetTexture();
-                AtObjects::Texture *NewTexture = LoadTexture(ID);
+                sdlObjects::Texture *Texture = Renderable->GetTexture();
+                sdlObjects::Texture *NewTexture = LoadTexture(ID);
                 if (Texture != NewTexture) {
                     Renderable->SetTexture(NewTexture);
                 }
@@ -96,7 +96,7 @@ namespace AtObjects {
     void TextureManager::SetObjectTexture(BaseType *Object, std::string TextureID) {
         if (Object) {
             if (TextureID == "") {
-                AtObjects::Renderable *Renderable = Object->GetRenderable();
+                sdlObjects::Renderable *Renderable = Object->GetRenderable();
                 Renderable->SetTexture(NULL);
                 Renderable->SetTextureID("");
             } else {
@@ -122,7 +122,7 @@ namespace AtObjects {
                     Color[3] = Strings::StringTo<float>(Data[3])*255.0f/100.0f;
                 }
 
-                AtObjects::Renderable *Renderable = Object->GetRenderable();
+                sdlObjects::Renderable *Renderable = Object->GetRenderable();
                 Renderable->SetIdleColor(Color);
 
                 //Hover Color
@@ -133,12 +133,12 @@ namespace AtObjects {
                     //Transparency
                     HoverColor[3] = 255;
 
-                    AtObjects::Renderable *Renderable = Object->GetRenderable();
+                    sdlObjects::Renderable *Renderable = Object->GetRenderable();
                     Renderable->SetHoverColor(HoverColor);
                 }
 
                 //Load Texture
-                AtObjects::Texture *Texture = LoadTexture(TextureID);
+                sdlObjects::Texture *Texture = LoadTexture(TextureID);
                 if (Texture) {
                     Renderable->SetTexture(Texture);
                     Renderable->SetTextureID(TextureID);

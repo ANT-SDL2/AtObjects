@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 
-namespace AtObjects {
+namespace sdlObjects {
     template <class IDType, class Type, class InheritedType = Type>
     class List {
         //Attributes

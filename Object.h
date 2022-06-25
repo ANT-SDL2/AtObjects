@@ -7,9 +7,9 @@
 #include <SDL2/SDL.h>
 #include "Interactable.h"
 #include "Renderable.h"
-#include <AtUtility/Vector2.h>
+#include <sdlUtility/Vector2.h>
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
 namespace Reference {
     static const int Origin             = 0;
@@ -25,7 +25,7 @@ namespace Position {
     static const float Edge               = 1.0f;
 }
 
-namespace AtObjects {
+namespace sdlObjects {
     namespace Events {
         static const int Idle               = 0;
         static const int MouseIn            = 1;
@@ -82,7 +82,7 @@ namespace AtObjects {
             std::string GetID();
             std::string GetIndex();
             class Interactable *GetInteractable();
-            AtObjects::Renderable *GetRenderable();
+            sdlObjects::Renderable *GetRenderable();
             std::string GetName();
             std::string GetValue();
             float Height(int State = 1);
@@ -156,7 +156,7 @@ namespace AtObjects {
             void Toggle();
             void Who();
         protected:
-            virtual void OnAnimationChange(AtObjects::Renderable *Renderable);
+            virtual void OnAnimationChange(sdlObjects::Renderable *Renderable);
             virtual int OnInput(SDL_Event &Event);
             virtual void OnCollision();
             virtual void OnDrag();

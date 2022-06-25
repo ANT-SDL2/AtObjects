@@ -8,12 +8,12 @@
 
 #include <iostream>
 
-#include <AtUtility/Strings.h>
-#include <AtUtility/Lua.h>
+#include <sdlUtility/Strings.h>
+#include <sdlUtility/Lua.h>
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     template <class StateType, class BaseType>
     class API {
         //Members

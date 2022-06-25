@@ -1,9 +1,9 @@
 //TextureManager.cpp
 #include "TextureManager.h"
 
-using namespace AtUtility;
+using namespace sdlUtility;
 
-namespace AtObjects {
+namespace sdlObjects {
     bool TextureManager::IsAnimationRegistered(std::string Animationset, int AnimationID) {
         std::ostringstream Stream;
         Stream << Animationset << ":" << AnimationID;
@@ -64,7 +64,7 @@ namespace AtObjects {
     }
 
     Texture *TextureManager::LoadTextureFromText(std::string FontPath, int Size, std::string Text, int Styles) {
-        AtObjects::Texture *Texture = NULL;
+        sdlObjects::Texture *Texture = NULL;
 
         if (Text != "") {
             std::ostringstream Stream;

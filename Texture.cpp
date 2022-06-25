@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace AtObjects {
+namespace sdlObjects {
     int Texture::GetColumns() {
         if (TileWidth) return Width/TileWidth; else return 1;
     }

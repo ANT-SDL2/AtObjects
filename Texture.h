@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include <gl/gl.h>
 #include <string>
-namespace AtObjects {
+namespace sdlObjects {
     class Texture {
         //Members
         public:
