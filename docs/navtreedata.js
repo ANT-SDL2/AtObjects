@@ -27,7 +27,7 @@ var NAVTREE =
   [ "sdlObjects", "index.html", [
     [ "sdlObjects", "md__c___users__aris__documents__projects__titania__c___sdl_objects__r_e_a_d_m_e.html", [
       [ "Compiling", "md__c___users__aris__documents__projects__titania__c___sdl_objects__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Dependencies:", "md__c___users__aris__documents__projects__titania__c___sdl_objects__r_e_a_d_m_e.html#autotoc_md2", null ],
+      [ "Dependencies", "md__c___users__aris__documents__projects__titania__c___sdl_objects__r_e_a_d_m_e.html#autotoc_md2", null ],
       [ "Documentation", "md__c___users__aris__documents__projects__titania__c___sdl_objects__r_e_a_d_m_e.html#autotoc_md3", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
