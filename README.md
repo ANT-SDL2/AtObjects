@@ -7,7 +7,7 @@ This library implements interactive and renderable objects used in a 2D game eng
 ## Compiling
 To compile the source code, it is recommended to use the Code::Blocks project included in this repository. This library has only been tested in Windows environments. 
 
-## Dependencies:
+## Dependencies
 - [sdlUtility](https://github.com/antSDL2/sdlUtility)
 - Lua 5.2 binding library (lua52)
 - OpenGL 3.2 (glu32, opengl32)
